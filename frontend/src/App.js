@@ -25,27 +25,27 @@ class App extends Component {
         });
     }
 
-    handleAnswerSelected(event) {
+    handleAnswerSelected(value) {
         let answers = this.state.answers.concat([]);
-        answers[this.state.question_index] = parseInt(event.currentTarget.value, 10);
+        answers[this.state.question_index] = parseInt(value, 10);
 
         this.setState({answers: answers});
 
         if (this.state.question_index < questions.length - 1) {
             setTimeout(
-                () => this.setNextQuestion(),
+                () => this.moveToNextQuestion(),
                 300
             );
         }
         else {
             setTimeout(
-                () => this.setResults(this.getResults()),
+                () => this.setResults(),
                 300
             );
         }
     }
 
-    setNextQuestion() {
+    moveToNextQuestion() {
         let next_question_index = this.state.question_index + 1;
 
         this.setState({
@@ -56,7 +56,7 @@ class App extends Component {
     }
 
     getResults() {
-        return questions.reduce(
+        let scores = questions.reduce(
             (acc, question, question_index) => {
                 let selected_val = this.state.answers[question_index];
                 let score = questions[question_index].correct_answer == selected_val;
@@ -65,10 +65,12 @@ class App extends Component {
             },
             0
         );
+
+        return scores.toString();
     }
 
-    setResults(result) {
-        this.setState({result: result.toString()});
+    setResults() {
+        this.setState({result: this.getResults()});
     }
 
     renderQuestion() {
