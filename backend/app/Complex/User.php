@@ -54,7 +54,6 @@ class User{
         $password = self::generate_password();
 
         $model->password = bcrypt($password);
-        $model->password_updated_at = Carbon::now();
 
         $model->save();
 
