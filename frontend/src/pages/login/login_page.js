@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import { withRouter } from 'react-router-dom';
 
+import userServiceInstance from '../../utils/services/user_service';
+
 class LoginPageComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -63,11 +65,19 @@ class LoginPageComponent extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        if (this.state.password == 'admin') {
-            localStorage.setItem('api_token', 'data_api_token');
 
-            this.props.history.push({pathname: '/home'});
-        }
+        userServiceInstance
+            .login({name: this.state.name, password: this.state.password})
+            .then((response) => {
+                return response;
+            })
+            .then((data) => {
+                this.props.history.push({pathname: '/home'});
+            });
+
+//        if (this.state.password == 'admin') {
+//            localStorage.setItem('api_token', 'data_api_token');
+//        }
     }
 
     render() {
