@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 
 import { Route, Redirect } from 'react-router-dom';
 
-import questions from '../../../mock_api/questions';
+import * as quizes from '../../../mock_api/questions';
+
 import Question from './Question';
 
 class Quiz extends Component {
@@ -22,9 +23,14 @@ class Quiz extends Component {
     }
 
     componentWillMount() {
+        let prev_quiz_index = localStorage.getItem('prev_quiz_index');
+        prev_quiz_index = (!prev_quiz_index) ? 0 : parseInt(JSON.parse(localStorage.getItem('prev_quiz_index')));
+
+        this.questions = prev_quiz_index == 0 ? quizes.default[1] : quizes.default[0];
+
         this.setState({
-            question_text: questions[this.state.question_index].question_text,
-            question_options: questions[this.state.question_index].question_options
+            question_text: this.questions[this.state.question_index].question_text,
+            question_options: this.questions[this.state.question_index].question_options
         });
     }
 
@@ -34,13 +40,19 @@ class Quiz extends Component {
 
         this.setState({answers: answers});
 
-        if (this.state.question_index < questions.length - 1) {
+        if (this.state.question_index < this.questions.length - 1) {
             setTimeout(
                 () => this.moveToNextQuestion(),
                 300
             );
         }
         else {
+            let prev_quiz_index = localStorage.getItem('prev_quiz_index');
+            prev_quiz_index = (!prev_quiz_index) ? 0 : parseInt(JSON.parse(localStorage.getItem('prev_quiz_index')));
+
+            let next_quiz_index = prev_quiz_index == 1 ? 0 : 1;
+            localStorage.setItem('prev_quiz_index', next_quiz_index);
+
             setTimeout(
                 () => this.setResults(),
                 300
@@ -53,16 +65,16 @@ class Quiz extends Component {
 
         this.setState({
             question_index: next_question_index,
-            question_text: questions[next_question_index].question_text,
-            question_options: questions[next_question_index].question_options
+            question_text: this.questions[next_question_index].question_text,
+            question_options: this.questions[next_question_index].question_options
         });
     }
 
     getResults() {
-        let scores = questions.reduce(
+        let scores = this.questions.reduce(
             (acc, question, question_index) => {
                 let selected_val = this.state.answers[question_index];
-                let score = questions[question_index].correct_answer == selected_val;
+                let score = this.questions[question_index].correct_answer == selected_val;
 
                 return acc + score;
             },
@@ -82,7 +94,7 @@ class Quiz extends Component {
                 question_text={this.state.question_text}
                 question_options={this.state.question_options}
                 question_index={this.state.question_index}
-                questions_total={questions.length}
+                questions_total={this.questions.length}
                 answers={this.state.answers}
                 onAnswerSelected={this.handleAnswerSelected}
             />
@@ -100,7 +112,7 @@ class Quiz extends Component {
                                 pathname: '/results',
                                 state: {
                                     scores: this.state.result,
-                                    out_of: questions.length,
+                                    out_of: this.questions.length,
                                 }
                             }
                     }

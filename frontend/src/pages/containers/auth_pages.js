@@ -1,5 +1,5 @@
 import React, { createElement } from 'react';
-import { withRouter, Switch, Route, Redirect, Link } from 'react-router-dom';
+import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 import * as Pages from '../index';
 
@@ -55,17 +55,6 @@ class AuthPagesComponent extends React.Component {
 
     render() {
         return  <div>
-                    <ul>
-                        <li>
-                            <Link to="/">Home</Link>
-                        </li>
-                        <li>
-                            <Link to="/quiz">Quiz</Link>
-                        </li>
-                        <li>
-                            <Link to="/results">Results</Link>
-                        </li>
-                    </ul>
                     <Switch>
                         <Route
                             exact path="/"
