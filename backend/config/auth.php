@@ -42,8 +42,8 @@ return [
         ],
 
         'api' => [
-            'driver' => 'token',
-            'provider' => 'users',
+            'driver' => 'tokenip',
+            'provider' => 'custom',
         ],
     ],
 
@@ -67,13 +67,17 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\User::class,
+            'model' => App\Models\User::class,
         ],
 
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+        'custom' => [
+            'driver' => 'custom',
+            'model' => App\Models\User::class,
+        ]
     ],
 
     /*
