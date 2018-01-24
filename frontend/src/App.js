@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
-import { HashRouter as Router, Switch, Route, Redirect, Link } from 'react-router-dom';
+import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
 import * as Pages from './pages/index';
+import { AuthPagesContainer } from './pages/containers/auth_pages';
 
 class App extends Component {
 
@@ -17,28 +18,18 @@ class App extends Component {
         return (
             <Router>
                 <div className="App">
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="/quiz">Quiz</Link>
-                    </li>
-                    <li>
-                        <Link to="/results">Results</Link>
-                    </li>
-                </ul>
                 <hr/>
-                    <Route exact path="/" component={Pages.HomePage}/>
-                    <Route exact path="/quiz" component={Pages.QuizPage}/>
-                    <Route
-                        exact
-                        path="/results"
+                <Switch>
+                    <Route path="/login" component={Pages.LoginPage} />
+                    <Route path="/"
                         render={
                             (props) => {
-                                let Component = Pages.ResultsPage;
-                                return <Component {...props.location.state} />
-                            }}/>
+                                return React.createElement(AuthPagesContainer, props)
+                            }
+                        }
+                    />
+                    <Redirect from="*" to="/" />
+                </Switch>
                 </div>
             </Router>
         );
