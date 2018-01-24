@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { API } from '../../configs/api';
+import { apiErrorsParser } from '../apiErrorsParser';
 
 export class ApiService {
     constructor () {
@@ -132,7 +133,9 @@ export class ApiService {
                     localStorage.removeItem('api_token');
                 }
                 else {
-                    errObj = new Error('');
+                    let errorsMsg = error.data && error.data.errors ? apiErrorsParser(error.data.errors) : 'Unknown error';
+
+                    errObj = new Error(errorsMsg);
                 }
 
                 break;

@@ -16,6 +16,7 @@ export class UserService extends ApiService {
                 return data;
             })
             .catch(function(error) {
+                window.alert(error.message);
                 throw error;
             });
     }
